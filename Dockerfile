@@ -1,4 +1,11 @@
-FROM golang:1.18 as builder
+# syntax=docker/dockerfile:latest
+FROM --platform=${TARGETPLATFORM} golang:1.23 AS builder
+
+# multi-arch
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
 
 # Disable cgo to remove gcc dependency
 ENV CGO_ENABLED=0
@@ -18,13 +25,15 @@ RUN go install github.com/datastax/cql-proxy
 # Run unit tests
 RUN go test -short -v ./...
 
-# a new clean image with just the binary
-FROM alpine:3.14
-RUN apk add --no-cache ca-certificates
+FROM --platform=${TARGETPLATFORM} alpine:3
 
-EXPOSE 9042
+RUN apk add --no-cache \
+  ca-certificates
 
 # Copy in the binary
-COPY --from=builder /go/bin/cql-proxy .
+COPY --from=builder --chmod=755 /go/bin/cql-proxy .
 
+HEALTHCHECK NONE
 ENTRYPOINT ["/cql-proxy"]
+CMD []
+EXPOSE 9042
