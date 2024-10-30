@@ -1,18 +1,18 @@
 # cql-proxy
 
-[![GitHub Action](https://github.com/datastax/cql-proxy/actions/workflows/test.yml/badge.svg)](https://github.com/datastax/cql-proxy/actions/workflows/test.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/datastax/cql-proxy)](https://goreportcard.com/report/github.com/datastax/cql-proxy)
+[![GitHub Action](https://github.com/eagleusb/cql-proxy/actions/workflows/test.yml/badge.svg)](https://github.com/eagleusb/cql-proxy/actions/workflows/test.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/eagleusb/cql-proxy)](https://goreportcard.com/report/github.com/eagleusb/cql-proxy)
 
 ## Table of Contents
 
-- [What is the cql-proxy?](https://github.com/datastax/cql-proxy#what-is-cqlproxy)
-- [When to use cql-proxy](https://github.com/datastax/cql-proxy#when-to-use-cql-proxy)
-- [Configuration](https://github.com/datastax/cql-proxy#configuration)
-- [Getting started](https://github.com/datastax/cql-proxy#getting-started)
-  - [Locally build and run](https://github.com/datastax/cql-proxy#locally-build-and-run)
-  - [Run a `cql-proxy` docker image](https://github.com/datastax/cql-proxy#run-a-cql-proxy-docker-image)
-  - [Use Kubernetes](https://github.com/datastax/cql-proxy#use-kubernetes)
-- [Known issues](https://github.com/datastax/cql-proxy#known-issues)
-    - [Token-aware load balancing](https://github.com/datastax/cql-proxy#token-aware-load-balancing)
+- [What is the cql-proxy?](https://github.com/eagleusb/cql-proxy#what-is-cqlproxy)
+- [When to use cql-proxy](https://github.com/eagleusb/cql-proxy#when-to-use-cql-proxy)
+- [Configuration](https://github.com/eagleusb/cql-proxy#configuration)
+- [Getting started](https://github.com/eagleusb/cql-proxy#getting-started)
+  - [Locally build and run](https://github.com/eagleusb/cql-proxy#locally-build-and-run)
+  - [Run a `cql-proxy` docker image](https://github.com/eagleusb/cql-proxy#run-a-cql-proxy-docker-image)
+  - [Use Kubernetes](https://github.com/eagleusb/cql-proxy#use-kubernetes)
+- [Known issues](https://github.com/eagleusb/cql-proxy#known-issues)
+    - [Token-aware load balancing](https://github.com/eagleusb/cql-proxy#token-aware-load-balancing)
 
 
 ## What is `cql-proxy`?
@@ -27,7 +27,7 @@ The `cql-proxy` sidecar enables unsupported CQL drivers to work with [DataStax A
 
 `cql-proxy` also enables applications that are currently using [Apache Cassandra][cassandra] or [DataStax Enterprise (DSE)][dse] to use Astra without requiring any code changes.  Your application just needs to be configured to use the proxy.
 
-If you're building a new application using DataStax [drivers], `cql-proxy` is not required, as the drivers can communicate directly with Astra. DataStax drivers have excellent support for Astra out-of-the-box, and are well-documented in the [driver-guide] guide. 
+If you're building a new application using DataStax [drivers], `cql-proxy` is not required, as the drivers can communicate directly with Astra. DataStax drivers have excellent support for Astra out-of-the-box, and are well-documented in the [driver-guide] guide.
 
 ## Configuration
 
@@ -224,7 +224,7 @@ Using Kubernetes with `cql-proxy` requires a number of steps:
 
 2. Create `cql-proxy.yaml`. You'll need to add three sets of information: arguments, volume mounts, and volumes. A full example can be found [here](k8s/cql-proxy.yml).
 
- - Argument: Modify the local bundle location, username and password, using the client ID and client secret obtained in the last step to the container argument.   
+ - Argument: Modify the local bundle location, username and password, using the client ID and client secret obtained in the last step to the container argument.
 
       ```
       command: ["./cql-proxy"]
@@ -236,26 +236,26 @@ Using Kubernetes with `cql-proxy` requires a number of steps:
       volumeMounts:
         - name: my-cm-vol
         mountPath: /tmp/
- 
 
-- Volume: Modify the `configMap` filename as required. In this example, it is named `cql-proxy-configmap`. Use the same name for the `volumes` that you used for the `volumeMounts`. 
+
+- Volume: Modify the `configMap` filename as required. In this example, it is named `cql-proxy-configmap`. Use the same name for the `volumes` that you used for the `volumeMounts`.
 
       volumes:
         - name: my-cm-vol
           configMap:
-            name: cql-proxy-configmap        
-    
+            name: cql-proxy-configmap
+
 3. Create a configmap. Use the same secure bundle that was specified in the `cql-proxy.yaml`.
-      
+
       ```sh
-      kubectl create configmap cql-proxy-configmap --from-file /tmp/scb.zip 
+      kubectl create configmap cql-proxy-configmap --from-file /tmp/scb.zip
       ```
 
-4. Check the configmap that was created. 
+4. Check the configmap that was created.
 
     ```sh
     kubectl describe configmap cql-proxy-configmap
-      
+
       Name:         cql-proxy-configmap
       Namespace:    default
       Labels:       <none>

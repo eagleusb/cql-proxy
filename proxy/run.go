@@ -29,9 +29,9 @@ import (
 	"time"
 
 	"github.com/alecthomas/kong"
-	"github.com/datastax/cql-proxy/astra"
-	"github.com/datastax/cql-proxy/proxycore"
 	"github.com/datastax/go-cassandra-native-protocol/primitive"
+	"github.com/eagleusb/cql-proxy/astra"
+	"github.com/eagleusb/cql-proxy/proxycore"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )
