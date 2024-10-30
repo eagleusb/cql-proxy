@@ -1,0 +1,6 @@
+.github
+*.md
+*.png
+Dockerfile
+LICENSE
+k8s/

@@ -7,19 +7,15 @@ ARG TARGETPLATFORM
 ARG TARGETOS
 ARG TARGETARCH
 
-ENV CGO_ENABLED=0
+WORKDIR /go/src/github.com/eagleusb/cql-proxy
 
-WORKDIR /go/src/cql-proxy
+COPY . .
 
-COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod tidy -v
 
-COPY . ./
+RUN GOOS=linux GOARCH=${TARGETARCH} CGO_ENABLED=0 \
+  go build -ldflags="-s -w" -o /go/bin/cql-proxy .
 
-# Build and install binary
-RUN go install github.com/eagleusb/cql-proxy@latest
-
-# Run unit tests
 RUN go test -short -v ./...
 
 FROM --platform=${TARGETPLATFORM} alpine:3
